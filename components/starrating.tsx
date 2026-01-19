@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 //import './StarRating.css'; // Optional for better styling
 
-const StarRating = ({rating = undefined, onRatingChange}) => {
-  const handleClick = (index) => {
+interface StarRatingProps {
+  rating?: number;
+  onRatingChange: (rating: number) => void;
+}
+
+const StarRating = ({rating = undefined, onRatingChange}: StarRatingProps) => {
+  const handleClick = (index: number) => {
     onRatingChange(index + 1);
   };
 

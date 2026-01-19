@@ -90,7 +90,14 @@ export default function Projects() {
     );
 }
 
-function Project({title, link, desc, used}) {
+interface ProjectProps {
+  title: string;
+  link: string;
+  desc: string;
+  used: string;
+}
+
+function Project({title, link, desc, used}: ProjectProps) {
     return (
         <div className='pb-4'>
         <h1 className='text-2xl'><Link className="cool-link" href={link} target="_blank"> {title} </Link></h1>

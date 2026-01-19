@@ -8,25 +8,39 @@ import Image from 'next/image'
 import Link from 'next/link';
 import { Prism } from 'react-syntax-highlighter'
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { GetStaticProps, GetStaticPaths } from 'next';
 
+interface PostProps {
+  id: string;
+  content: string;
+  data: {
+    title: string;
+    date: string;
+    [key: string]: any;
+  };
+}
 
-export async function getStaticProps({ params }) {
+export const getStaticProps: GetStaticProps<PostProps> = async ({ params }) => {
   const {
     id,
     data,
     content
-  } = await getPostData(params.id);
+  } = await getPostData(params!.id as string);
 
   return {
     props: {
       id,
       content,
-      data
+      data: {
+        title: data.title as string,
+        date: data.date as string,
+        ...data
+      }
     },
   };
 }
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   const paths = getAllPostIds();
   return {
     paths,
@@ -34,7 +48,7 @@ export async function getStaticPaths() {
   };
 }
 
-export default function Post({ data, content }) {
+export default function Post({ data, content }: PostProps) {
   return (
     <Layout>
       <Head>
