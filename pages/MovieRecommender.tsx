@@ -3,14 +3,20 @@ import Link from "next/link";
 import MovieCard from "../components/movie"
 import React, { useState, useEffect } from 'react';
 
+type Movie = [string, string];
+
+interface Ratings {
+  [key: string]: number;
+}
+
 export default function MovieRecommender() {
-    const [toRate, setToRate] = useState([]);
+    const [toRate, setToRate] = useState<Movie[]>([]);
 
-    const [recs, setRecs] = useState([]);
+    const [recs, setRecs] = useState<Movie[]>([]);
 
-    const [ratings, setRatings] = useState({})
+    const [ratings, setRatings] = useState<Ratings>({})
 
-    const updateRating = (movieId, rating) => {
+    const updateRating = (movieId: string, rating: number) => {
         setRatings((prevRatings) => ({
           ...prevRatings,
           [movieId]: rating,
@@ -78,10 +84,11 @@ export default function MovieRecommender() {
     </button>
     <div className="grid grid-cols-2 md:grid-cols-10 gap-4">
         {recs.map(([id,title]) => (
-            <MovieCard 
+            <MovieCard
                 key={id}
-                movieid={id} 
+                movieid={id}
                 title={title}
+                rating={0}
                 showRating={false}
             />
         ))}

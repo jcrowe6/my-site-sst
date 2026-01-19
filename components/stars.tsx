@@ -1,4 +1,12 @@
-export default function Stars({children, setAnimate, animate}) {
+import { ReactNode } from 'react';
+
+interface StarsProps {
+  children?: ReactNode;
+  setAnimate?: (animate: boolean) => void;
+  animate: boolean;
+}
+
+export default function Stars({children, setAnimate, animate}: StarsProps) {
 
     return (
         <>

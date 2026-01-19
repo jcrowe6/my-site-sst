@@ -2,15 +2,21 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import Stars from './stars';
+import { ReactNode } from 'react';
 
 const name = 'Jeremiah Crowell';
 export const siteTitle = 'Jeremiah Crowell';
 
-export default function Layout({ children, home }) {
+interface LayoutProps {
+  children: ReactNode;
+  home?: boolean;
+}
+
+export default function Layout({ children, home }: LayoutProps) {
 
   return (
   <>
-  <Stars animate={home}/>
+  <Stars animate={home ?? false}/>
   <div className="container mx-auto my-12 px-5 max-w-3xl">
       <Head>
         <meta

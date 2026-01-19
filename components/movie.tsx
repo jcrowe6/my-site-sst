@@ -1,7 +1,17 @@
 import Image from "next/image"
 import StarRating from "./starrating"
+import { ReactNode } from 'react';
 
-export default function MovieCard({children, movieid, title, rating, onRatingChange, showRating=true}) {
+interface MovieCardProps {
+  children?: ReactNode;
+  movieid: string;
+  title: string;
+  rating: number;
+  onRatingChange?: (rating: number) => void;
+  showRating?: boolean;
+}
+
+export default function MovieCard({children, movieid, title, rating, onRatingChange, showRating=true}: MovieCardProps) {
     return (
         <>
         <div className="flex flex-col items-center h-75">
@@ -14,7 +24,7 @@ export default function MovieCard({children, movieid, title, rating, onRatingCha
             <div className="lg:h-14 lg:text-sm md:h-20 md:text-xs text-center">
             <p>{title}</p>
             </div>
-            {showRating && <StarRating rating={rating} onRatingChange={onRatingChange}/>}
+            {showRating && onRatingChange && <StarRating rating={rating} onRatingChange={onRatingChange}/>}
         </div>
         </>
     )

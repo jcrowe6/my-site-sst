@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link'
 import Layout, { siteTitle } from '../components/layout';
 import React from 'react';
-import { getSortedPostsData } from '../libs/posts';
+import { getSortedPostsData, PostData } from '../libs/posts';
 import Date from '../components/date'
 
 export async function getStaticProps() {
@@ -14,7 +14,11 @@ export async function getStaticProps() {
   };
 }
 
-export default function Home({ allPostsData }) {
+interface HomeProps {
+  allPostsData: PostData[];
+}
+
+export default function Home({ allPostsData }: HomeProps) {
   return (
     <Layout home>
       <Head>
@@ -52,8 +56,13 @@ export default function Home({ allPostsData }) {
   );
 }
 
-class CycleName extends React.Component {
-  constructor(props) {
+interface CycleNameState {
+  num: number;
+  names: string[];
+}
+
+class CycleName extends React.Component<{}, CycleNameState> {
+  constructor(props: {}) {
     super(props);
     this.state = {
       num: 0,
