@@ -46,7 +46,18 @@ export default function MovieRecommender() {
     
 
     return (
-    <div className="m-10">
+    <div className="relative">
+    {/* Overlay for blocking interactions */}
+    <div className="fixed inset-0 bg-black bg-opacity-40 z-40 pointer-events-auto" />
+
+    {/* Banner message */}
+    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white text-black p-8 text-center shadow-2xl rounded-2xl max-w-2xl">
+        <h2 className="text-3xl font-bold mb-2">⚠️ Temporarily Down ⚠️</h2>
+        <p className="text-lg bg-white">This demo is currently unavailable while I'm migrating the site to SST.</p>
+    </div>
+
+    {/* Existing content - visible but not clickable */}
+    <div className="m-10 pointer-events-none">
     <h1 className='text-4xl pb-2'>Movie Recommendation App</h1>
     <p className="text-lg pb-5">
         Project 4 by Jeremiah Crowell (jcrowe6) for CS 598 PSL. 
@@ -92,6 +103,7 @@ export default function MovieRecommender() {
                 showRating={false}
             />
         ))}
+    </div>
     </div>
     </div>
     )
