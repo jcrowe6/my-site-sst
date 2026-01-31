@@ -10,6 +10,15 @@ export default $config({
     };
   },
   async run() {
-    new sst.aws.Nextjs("MyWeb");
+    new sst.aws.StaticSite("MyWeb", {
+      build: {
+        command: "npm run build",
+        output: "out",
+      },
+      domain: {
+        name: "jcrowell.net",
+        redirects: ["www.jcrowell.net"],
+      },
+    });
   },
 });
