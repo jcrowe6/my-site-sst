@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
+    "build": "next build",
     "dev": "bun --bun next dev",
-    "build": "bun --bun next build",
     "start": "bun --bun next build && bun --bun serve out"
   },
   "dependencies": {
@@ -22,7 +22,8 @@
     "react-syntax-highlighter": "^15.5.0",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.0",
-    "remark-html": "^16.0.1"
+    "remark-html": "^16.0.1",
+    "sst": "3.17.37"
   },
   "devDependencies": {
     "@types/node": "^25.0.9",
