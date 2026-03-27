@@ -1,0 +1,12 @@
+---
+interface Props {
+  animate?: boolean;
+}
+
+const { animate = false } = Astro.props;
+---
+
+<div class={animate ? 'stars move1' : 'stars set1'}></div>
+<div class={animate ? 'stars2 move2' : 'stars2 set2'}></div>
+<div class={animate ? 'stars3 move3' : 'stars3 set3'}></div>
+<div class="tailstars"></div>

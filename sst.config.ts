@@ -13,7 +13,7 @@ export default $config({
     new sst.aws.StaticSite("MyWeb", {
       build: {
         command: "npm run build",
-        output: "out",
+        output: "dist",
       },
       domain: {
         name: "jcrowell.net",

@@ -2,13 +2,12 @@
 
 module.exports = {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}"
+    "./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"
   ],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-librefranklin)'],
+        librefranklin: ['Libre Franklin', 'sans-serif'],
       }
     },
     screens: {
@@ -17,7 +16,7 @@ module.exports = {
 
       'md': '800px',
       // => @media (min-width: 768px) { ... }
-      
+
       'lg': '1536px',
       // removing higher screens sets default to mobile size - which is what I want for this style of website
       //'lg': '1024px',
@@ -30,6 +29,8 @@ module.exports = {
       // => @media (min-width: 1536px) { ... }
     }
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }
 

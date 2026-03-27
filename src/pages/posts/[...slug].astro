@@ -1,0 +1,42 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout title={post.data.title}>
+  <article class="prose prose-invert prose-lg max-w-none
+    [&>h1]:text-4xl [&>h1]:text-center [&>h1]:font-bold [&>h1]:pb-3
+    [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:pt-2 [&>h2]:pb-1
+    [&>p]:text-lg [&>p]:leading-relaxed [&>p]:py-0
+    [&>ul]:list-disc [&>ul]:list-outside [&>ul]:ms-8 [&>ul]:py-1 [&>ul]:text-lg
+    [&_a]:cool-link
+    [&_img]:py-2 [&_img]:mx-auto [&_img]:w-4/5
+    [&_p_code]:font-mono [&_p_code]:bg-gray-700 [&_p_code]:px-1.5 [&_p_code]:py-0.5 [&_p_code]:rounded [&_p_code]:text-sm [&_p_code]:font-normal [&_p_code]:before:content-[''] [&_p_code]:after:content-['']
+    [&_li_code]:font-mono [&_li_code]:bg-gray-700 [&_li_code]:px-1.5 [&_li_code]:py-0.5 [&_li_code]:rounded [&_li_code]:text-sm [&_li_code]:font-normal [&_li_code]:before:content-[''] [&_li_code]:after:content-['']
+    [&_pre]:bg-transparent [&_pre]:p-0 [&_pre]:my-4
+    [&_pre_code]:bg-gray-800 [&_pre_code]:block [&_pre_code]:p-4 [&_pre_code]:rounded-lg [&_pre_code]:overflow-x-auto [&_pre_code]:border-0 [&_pre_code]:font-normal [&_pre_code]:before:content-[''] [&_pre_code]:after:content-['']
+    [&_pre_.line]:bg-transparent
+    [&_table]:mx-auto [&_table]:w-11/12 [&_table]:text-left [&_table]:my-3
+    [&_tr]:bg-white [&_tr]:border-b [&_tr]:dark:bg-gray-800 [&_tr]:dark:border-gray-700
+    [&_th]:px-6 [&_th]:py-4 [&_th]:text-gray-700 [&_th]:bg-gray-50 [&_th]:dark:bg-gray-700 [&_th]:dark:text-gray-400
+    [&_td]:px-6 [&_td]:py-4
+  ">
+    <h1>{post.data.title}</h1>
+    <p class="text-gray-400 text-lg pb-3">
+      <FormattedDate dateString={post.data.date} />
+    </p>
+    <Content />
+  </article>
+</Layout>
