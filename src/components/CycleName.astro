@@ -1,0 +1,21 @@
+---
+// Client-side interactive name cycling component
+---
+
+<p>
+  Hi! I'm <span class="cursor-default cool-link" id="cycle-name">Jeremiah</span>
+</p>
+
+<script>
+  const names = ['Jeremiah', 'Jay', 'Jerry', 'JP', 'j4yb0ne'];
+  let currentIndex = 0;
+
+  const nameElement = document.getElementById('cycle-name');
+
+  if (nameElement) {
+    nameElement.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % names.length;
+      nameElement.textContent = names[currentIndex];
+    });
+  }
+</script>
