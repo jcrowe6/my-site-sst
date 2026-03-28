@@ -16,7 +16,8 @@ const { Content } = await render(post);
 ---
 
 <Layout title={post.data.title}>
-  <article class="prose prose-invert prose-lg max-w-none
+  <article
+    class="prose prose-invert prose-lg max-w-none
     [&>h1]:text-4xl [&>h1]:text-center [&>h1]:font-bold [&>h1]:pb-3
     [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:pt-2 [&>h2]:pb-1
     [&>p]:text-lg [&>p]:leading-relaxed [&>p]:py-0
@@ -31,8 +32,8 @@ const { Content } = await render(post);
     [&_table]:mx-auto [&_table]:w-11/12 [&_table]:text-left [&_table]:my-3
     [&_tr]:bg-white [&_tr]:border-b [&_tr]:dark:bg-gray-800 [&_tr]:dark:border-gray-700
     [&_th]:px-6 [&_th]:py-4 [&_th]:text-gray-700 [&_th]:bg-gray-50 [&_th]:dark:bg-gray-700 [&_th]:dark:text-gray-400
-    [&_td]:px-6 [&_td]:py-4
-  ">
+    [&_td]:px-6 [&_td]:py-4"
+  >
     <h1>{post.data.title}</h1>
     <p class="text-gray-400 text-lg pb-3">
       <FormattedDate dateString={post.data.date} />

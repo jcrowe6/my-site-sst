@@ -1,12 +1,12 @@
 ---
-import { getCollection } from "astro:content";
-import Layout from "../layouts/Layout.astro";
-import FormattedDate from "../components/FormattedDate.astro";
-import CycleName from "../components/CycleName.astro";
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import CycleName from '../components/CycleName.astro';
 
-const posts = await getCollection("posts");
+const posts = await getCollection('posts');
 const sortedPosts = posts.sort(
-  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
 ---
 

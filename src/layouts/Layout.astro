@@ -1,7 +1,7 @@
 ---
-import { Image } from "astro:assets";
-import Stars from "../components/Stars.astro";
-import "../styles/global.css";
+import { Image } from 'astro:assets';
+import Stars from '../components/Stars.astro';
+import '../styles/global.css';
 
 interface Props {
   title?: string;
@@ -10,11 +10,11 @@ interface Props {
 }
 
 const {
-  title = "Jeremiah Crowell",
-  description = "Portfolio and personal site of Jeremiah Crowell",
+  title = 'Jeremiah Crowell',
+  description = 'Portfolio and personal site of Jeremiah Crowell',
   home = false,
 } = Astro.props;
-const name = "Jeremiah Crowell";
+const name = 'Jeremiah Crowell';
 ---
 
 <!doctype html>
@@ -40,8 +40,8 @@ const name = "Jeremiah Crowell";
       function gtag() {
         dataLayer.push(arguments);
       }
-      gtag("js", new Date());
-      gtag("config", "G-T5TJ893ZKF");
+      gtag('js', new Date());
+      gtag('config', 'G-T5TJ893ZKF');
     </script>
   </head>
   <body class="bg-neutral-950 text-blue-50 font-librefranklin">
