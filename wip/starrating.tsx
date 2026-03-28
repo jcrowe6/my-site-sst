@@ -6,18 +6,21 @@ interface StarRatingProps {
   onRatingChange: (rating: number) => void;
 }
 
-const StarRating = ({rating = undefined, onRatingChange}: StarRatingProps) => {
+const StarRating = ({
+  rating = undefined,
+  onRatingChange,
+}: StarRatingProps) => {
   const handleClick = (index: number) => {
     onRatingChange(index + 1);
   };
 
   return (
-    <div className='flex gap-1 cursor-pointer mx-4'>
+    <div className="flex gap-1 cursor-pointer mx-4">
       {[...Array(5)].map((_, index) => (
         <span
           key={index}
           onClick={() => handleClick(index)}
-          className='lg:text-2xl md:'
+          className="lg:text-2xl md:"
           style={{
             color: rating !== undefined && index < rating ? 'gold' : 'grey',
           }}

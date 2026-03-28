@@ -1,23 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-  content: [
-    "./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"
-  ],
+  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
       fontFamily: {
         librefranklin: ['Libre Franklin', 'sans-serif'],
-      }
+      },
     },
     screens: {
-      'sm': '640px',
+      sm: '640px',
       // => @media (min-width: 640px) { ... }
 
-      'md': '800px',
+      md: '800px',
       // => @media (min-width: 768px) { ... }
 
-      'lg': '1536px',
+      lg: '1536px',
       // removing higher screens sets default to mobile size - which is what I want for this style of website
       //'lg': '1024px',
       // => @media (min-width: 1024px) { ... }
@@ -27,10 +25,7 @@ module.exports = {
 
       //'2xl': '1536px',
       // => @media (min-width: 1536px) { ... }
-    }
+    },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
-}
-
+  plugins: [require('@tailwindcss/typography')],
+};

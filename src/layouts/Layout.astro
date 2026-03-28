@@ -1,6 +1,7 @@
 ---
-import Stars from '../components/Stars.astro';
-import '../styles/global.css';
+import { Image } from "astro:assets";
+import Stars from "../components/Stars.astro";
+import "../styles/global.css";
 
 interface Props {
   title?: string;
@@ -8,11 +9,15 @@ interface Props {
   home?: boolean;
 }
 
-const { title = 'Jeremiah Crowell', description = 'Portfolio and personal site of Jeremiah Crowell', home = false } = Astro.props;
-const name = 'Jeremiah Crowell';
+const {
+  title = "Jeremiah Crowell",
+  description = "Portfolio and personal site of Jeremiah Crowell",
+  home = false,
+} = Astro.props;
+const name = "Jeremiah Crowell";
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -21,60 +26,74 @@ const name = 'Jeremiah Crowell';
     <meta property="og:title" content={title} />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400&display=swap"
+      rel="stylesheet"
+    />
     <title>{title}</title>
 
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T5TJ893ZKF"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T5TJ893ZKF"
+    ></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-T5TJ893ZKF');
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-T5TJ893ZKF");
     </script>
   </head>
   <body class="bg-neutral-950 text-blue-50 font-librefranklin">
     <Stars animate={home} />
     <div class="container mx-auto my-12 px-5 max-w-3xl">
       <header class="flex flex-col items-center">
-        {home ? (
-          <>
-            <img
-              src="/images/hs7.jpg"
-              class="rounded-[80px] transition-all hover:-translate-y-1 hover:rounded-[40px] duration-300"
-              height="144"
-              width="144"
-              alt={name}
-            />
-            <h1 class="text-3xl md:text-4xl text-nowrap font-bold p-5">{name}</h1>
-          </>
-        ) : (
-          <>
-            <a href="/">
-              <img
+        {
+          home ? (
+            <>
+              <Image
                 src="/images/hs7.jpg"
-                class="rounded-[80px] transition-all hover:-translate-y-1 hover:rounded-[30px] duration-300"
-                height="108"
-                width="108"
+                class="rounded-[80px] transition-all hover:-translate-y-1 hover:rounded-[40px] duration-300"
+                height="144"
+                width="144"
                 alt={name}
               />
-            </a>
-            <h2 class="text-2xl text-nowrap font-bold p-5">
-              <a href="/" class="text-inherit">
+              <h1 class="text-3xl md:text-4xl text-nowrap font-bold p-5">
                 {name}
+              </h1>
+            </>
+          ) : (
+            <>
+              <a href="/">
+                <Image
+                  src="/images/hs7.jpg"
+                  class="rounded-[80px] transition-all hover:-translate-y-1 hover:rounded-[30px] duration-300"
+                  height="108"
+                  width="108"
+                  alt={name}
+                />
               </a>
-            </h2>
-          </>
-        )}
+              <h2 class="text-2xl text-nowrap font-bold p-5">
+                <a href="/" class="text-inherit">
+                  {name}
+                </a>
+              </h2>
+            </>
+          )
+        }
       </header>
       <main>
         <slot />
       </main>
-      {!home && (
-        <div class="my-8">
-          <a class="text-xl cool-link" href="/">← Back to home</a>
-        </div>
-      )}
+      {
+        !home && (
+          <div class="my-8">
+            <a class="text-xl cool-link" href="/">
+              ← Back to home
+            </a>
+          </div>
+        )
+      }
     </div>
   </body>
 </html>

