@@ -4,9 +4,73 @@ interface Props {
 }
 
 const { animate = false } = Astro.props;
+
+function generateStars(count: number, minX: number, maxX: number, maxY: number, miny: number): string {
+  return Array.from({ length: count }, () => {
+    const x = Math.floor(Math.random() * (maxX - minX) + minX);
+    const y = Math.floor(Math.random() * maxY) + miny;
+    return `${x}px ${y}px #ddd`;
+  }).join(', ');
+}
+
+function invLogLogisticCdf(a: number, b: number, p: number) {
+  return a * Math.pow(p/(1-p), 1/b)
+}
+
+// Generates X uniformly and Y with a truncated Guassian
+function generateStarsLogLogistic(count: number, offsetX: number, a: number, b: number) {
+  return Array.from({ length: count }, () => {
+    const x = (Math.random() * (2*offsetX)) - offsetX;
+    const y = invLogLogisticCdf(a,b,Math.random());
+    console.log(y)
+    return `${x}px ${y}px #ddd`;
+  }).join(', ');
+}
+
+const maxWidth = 2560;
+const offset = maxWidth / 2;
+
+const small  = generateStarsLogLogistic(10000, offset, 1000, 1);
+const medium = generateStars(200, -offset, offset, 5000, 0);
+const large  = generateStars(100, -offset, offset, 2000, 0);
+const tail  = generateStars(1000, -offset, offset, 10000, 1440);
+
+function generateStarAnimation(index: number, translateY: number): string {
+  return `
+    @keyframes animStar${index || ''} {
+      from {
+        transform: translateY(0px);
+      }
+      to {
+        transform: translateY(-${translateY}px);
+      }
+    }
+
+    .move${index} {
+      animation: animStar${index || ''} 6s forwards;
+      animation-timing-function: cubic-bezier(0.24, 0.75, 0.52, 1.01);
+    }
+
+    .set${index} {
+      position: absolute;
+      top: -${translateY}px;
+    }
+  `;
+}
 ---
 
-<div class={animate ? 'stars move1' : 'stars set1'}></div>
-<div class={animate ? 'stars2 move2' : 'stars2 set2'}></div>
-<div class={animate ? 'stars3 move3' : 'stars3 set3'}></div>
-<div class="tailstars"></div>
+<div class={`stars ${animate ? 'move1' : 'set1'}`}></div>
+<!-- <div class={`stars2 ${animate ? 'move2' : 'set2'}`}></div>
+<div class={`stars3 ${animate ? 'move3' : 'set3'}`}></div>
+<div class="tailstars"></div> -->
+
+<style set:html={`
+  .stars  { width: 1px; height: 1px; box-shadow: ${small}; }
+  .stars2 { width: 2px; height: 2px; box-shadow: ${medium}; }
+  .stars3 { width: 3px; height: 3px; box-shadow: ${large}; }
+  .tailstars { width: 1px; height: 1px; box-shadow: ${tail}; }
+
+  ${generateStarAnimation(1, 250)}
+  ${generateStarAnimation(2, 350)}
+  ${generateStarAnimation(3, 500)}
+`}></style>
