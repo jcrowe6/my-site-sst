@@ -4,9 +4,61 @@ interface Props {
 }
 
 const { animate = false } = Astro.props;
+
+function invLogLogisticCdf(a: number, b: number, p: number) {
+  return a * Math.pow(p/(1-p), 1/b)
+}
+
+// Generates X uniformly and Y with a log logistic distribution
+function generateStarsLogLogistic(count: number, offsetX: number, a: number, b: number) {
+  return Array.from({ length: count }, () => {
+    const x = (Math.random() * (2*offsetX)) - offsetX;
+    const y = invLogLogisticCdf(a,b,Math.random());
+    return `${x}px ${y}px #ddd`;
+  }).join(', ');
+}
+
+const maxWidth = 2560;
+const offset = maxWidth / 2;
+
+const small  = generateStarsLogLogistic(2000, offset, 1000, 1);
+const medium = generateStarsLogLogistic(500, offset, 1000, 1);
+const large  = generateStarsLogLogistic(100, offset, 1000, 1);
+
+function generateStarAnimation(index: number, translateY: number): string {
+  return `
+    @keyframes animStar${index || ''} {
+      from {
+        transform: translateY(0px);
+      }
+      to {
+        transform: translateY(-${translateY}px);
+      }
+    }
+
+    .move${index} {
+      animation: animStar${index || ''} 6s forwards;
+      animation-timing-function: cubic-bezier(0.24, 0.75, 0.52, 1.01);
+    }
+
+    .set${index} {
+      position: absolute;
+      top: -${translateY}px;
+    }
+  `;
+}
 ---
 
-<div class={animate ? 'stars move1' : 'stars set1'}></div>
-<div class={animate ? 'stars2 move2' : 'stars2 set2'}></div>
-<div class={animate ? 'stars3 move3' : 'stars3 set3'}></div>
-<div class="tailstars"></div>
+<div class={`stars ${animate ? 'move1' : 'set1'}`}></div>
+<div class={`stars2 ${animate ? 'move2' : 'set2'}`}></div>
+<div class={`stars3 ${animate ? 'move3' : 'set3'}`}></div>
+
+<style set:html={`
+  .stars  { width: 1px; height: 1px; z-index: -1; box-shadow: ${small}; }
+  .stars2 { width: 2px; height: 2px; z-index: -1; box-shadow: ${medium}; }
+  .stars3 { width: 3px; height: 3px; z-index: -1; box-shadow: ${large}; }
+
+  ${generateStarAnimation(1, 250)}
+  ${generateStarAnimation(2, 350)}
+  ${generateStarAnimation(3, 500)}
+`}></style>
