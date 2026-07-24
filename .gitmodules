@@ -1,0 +1,3 @@
+[submodule "toys/pascals-triangle"]
+	path = toys/pascals-triangle
+	url = https://github.com/jcrowe6/pascals-triangle.git
