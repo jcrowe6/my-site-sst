@@ -1,6 +1,6 @@
 ---
 title: "Pascal's (modulo) triangle"
-date: '2026-08-19'
+date: '2026-10-27'
 ---
 
 It's well known that if you take [Pascal's triangle](https://en.wikipedia.org/wiki/Pascal's_triangle), and mark the odd numbers black and the even numbers white, the [Sierpiński triangle](https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle) emerges.
