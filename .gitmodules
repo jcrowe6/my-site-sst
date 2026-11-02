@@ -1,3 +1,6 @@
 [submodule "submodules/pascals-triangle"]
 	path = submodules/pascals-triangle
 	url = https://github.com/jcrowe6/pascals-triangle.git
+[submodule "submodules/puzzle-solves"]
+	path = submodules/puzzle-solves
+	url = https://github.com/jcrowe6/puzzle-solves.git
