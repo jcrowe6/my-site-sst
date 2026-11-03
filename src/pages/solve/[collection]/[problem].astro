@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const puzzles = await getCollection('puzzles');
+  const solves = await getCollection('solves');
+
+  return puzzles.map((puzzle) => ({
+    params: {
+      collection: puzzle.data.collection,
+      problem: String(puzzle.data.problem),
+    },
+    props: {
+      puzzle,
+      solve: solves.find(
+        (p) =>
+          p.data.collection === puzzle.data.collection &&
+          p.data.problem === puzzle.data.problem
+      )
+    }
+  }));
+}
+
+const { solve, puzzle } = Astro.props;
+
+const { Content: PuzzleContent } = await render(puzzle)
+const renderedSolve = solve ? await render(solve) : null
+const SolveContent = renderedSolve?.Content
+const formattedSolveDate = solve ? new Date(solve.data.date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC'
+}) : null;
+---
+
+<Layout>
+<h1>{puzzle?.data.title}</h1>
+<PuzzleContent/>
+<p>{formattedSolveDate}</p>
+{SolveContent && (
+  <SolveContent/>
+)}
+</Layout>

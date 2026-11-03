@@ -1,0 +1,32 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+const puzzles = await getCollection('puzzles');
+const books = await getCollection('books');
+
+---
+<Layout>
+    <ul>
+        {
+            books.map((book) => 
+                <li>
+                    <p>{book.data.title}</p>
+                    <ul>
+                        {
+                            puzzles
+                                .filter((puz) => puz.data.collection == book.data.id)
+                                .sort((puzA, puzB) => puzA.data.problem - puzB.data.problem)
+                                .map((puz) => 
+                                    <a href={`/solve/${puz.data.collection}/${puz.data.problem}`}>
+                                        <li>{puz.data.problem}. {puz.data.title}</li>
+                                    </a>
+                                )
+                        }
+                    </ul>
+                </li>
+            )
+            
+        }
+    </ul>
+</Layout>
