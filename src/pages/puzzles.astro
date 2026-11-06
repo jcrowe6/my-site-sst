@@ -1,21 +1,45 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import Dropdown from '../components/Dropdown.astro';
 
 const puzzles = await getCollection('puzzles');
 const books = await getCollection('books');
+const solves = await getCollection('solves')
+const solveChar = "✔️"
+
+function getTitle(puzzle: typeof puzzles[number]) {
+    const isSolved = solves.find(
+        (solve) => 
+            solve.data.collection == puzzle.data.collection && 
+            solve.data.problem == puzzle.data.problem
+        )
+    return `${puzzle.data.problem}. ${puzzle.data.title}${isSolved ? " " + solveChar : ""}`
+} 
 ---
 
 <Layout title="Puzzles">
   <article class="space-y-6">
-    <header>
-      <h1 class="text-4xl font-bold">Puzzles</h1>
-      <!-- <p class="mt-2 text-lg text-gray-300">
-        ??
-      </p> -->
-    </header>
+    <h1 class="text-4xl font-bold">Puzzles</h1>
+    <Dropdown title="What is this?">
+      <div class="space-y-2 text-lg text-gray-300">
+        <p>
+          I've long had Martin Garder's <i>My Best Mathematical and Logic Puzzles</i>, in which I have taped off the solutions section at the back - swearing to never look at them until I've solved them all.
+        </p>
+        <p>
+          Well I thought I'd get around to actually doing it, and started a dedicated notebook to write down my solutions and everything.
+        </p>
+        <p>
+          To help keep me motivated I want to be able to show off my progress, so when I solve a puzzle I scan the page and upload it to <a href="https://github.com/jcrowe6/puzzle-solves" class="cool-link">this repo</a> which converts it to markdown with TeX, and then appears on this page.
+        </p>
+        <p>
+          {solveChar} = solved
+        </p>
+      </div>
+    </Dropdown>
 
-    <ul class="space-y-6 list-none p-0 m-0">
+    <h3 class="text-3xl">Collections</h1>
+    <ul class="list-none p-0 m-0 space-y-4">
       {
         books.map((book) => {
           const bookPuzzles = puzzles
@@ -23,22 +47,21 @@ const books = await getCollection('books');
             .sort((puzA, puzB) => puzA.data.problem - puzB.data.problem);
 
           return (
-            <li class="ml-4">
-              <p class="mb-2 text-xl font-semibold text-blue-100">
-                <i>{book.data.title}</i>, {book.data.author}
-              </p>
-              <ul class="space-y-1 list-none p-0 m-0 ml-4">
-                {bookPuzzles.map((puz) => (
-                  <li>
-                    <a
-                      href={`/solve/${puz.data.collection}/${puz.data.problem}`}
-                      class="cool-link text-lg"
-                    >
-                      {puz.data.problem}. {puz.data.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+            <li>
+              <Dropdown title={`${book.data.title}, ${book.data.author}`} open={true}>
+                <ul class="list-none p-0 m-0 space-y-1">
+                  {bookPuzzles.map((puz) => (
+                    <li>
+                      <a
+                        href={`/solve/${puz.data.collection}/${puz.data.problem}`}
+                        class="cool-link text-lg"
+                      >
+                        {getTitle(puz)}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </Dropdown>
             </li>
           );
         })

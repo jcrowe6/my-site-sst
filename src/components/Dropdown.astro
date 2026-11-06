@@ -1,0 +1,28 @@
+---
+interface Props {
+  title: string;
+  open?: boolean;
+}
+
+const { title, open = false } = Astro.props;
+---
+
+<details open={open || undefined}>
+  <summary class="flex cursor-pointer list-none items-center gap-2 text-inherit">
+    <span class="triangle block h-0 w-0 border-y-[5px] border-l-[7px] border-y-transparent border-l-current text-blue-300"></span>
+    <span class="text-lg text-blue-50">{title}</span>
+  </summary>
+  <div class="mt-2 pl-6">
+    <slot />
+  </div>
+</details>
+
+<style>
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  details[open] .triangle {
+    transform: rotate(90deg);
+  }
+</style>

@@ -89,8 +89,12 @@ const name = 'Jeremiah Crowell';
       {
         !home && (
           <div class="my-8">
-            <a class="text-xl cool-link" href="/">
-              ← Back to home
+            <a
+              class="text-lg cool-link"
+              href="/"
+              onclick="if (window.history.length > 1) { window.history.back(); return false; }"
+            >
+              ← Back
             </a>
           </div>
         )
