@@ -3,6 +3,12 @@ title: "Pascal's (modulo) triangle"
 date: '2026-10-27'
 ---
 
+Check out this [math viz toy](/pascals-triangle) I made! It does cool stuff like this:
+
+![](/images/anim1.gif)
+
+### What is it?
+
 It's well known that if you take [Pascal's triangle](https://en.wikipedia.org/wiki/Pascal's_triangle), and mark the odd numbers black and the even numbers white, the [Sierpiński triangle](https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle) emerges.
 
 ![](/images/Sierpinski_Pascal_triangle.png)
@@ -18,11 +24,11 @@ But it did it's job, and generated some cool pictures! Here's the result for mod
 Well, I was mostly satisfied with that, but even now this problem pops up in my head not-infrequently. There were some really interesting patterns that emerged, but the
 script was way too slow to really explore it all that well. 
 
-So, I decided to revisit this, and make a little browser toy using HTML5's `<canvas>` element and some JS. [Here it is!](/pascals-triangle)
+So, I decided to revisit this, and make a little browser toy using HTML5's `<canvas>` element and some JS. 
 
 This is exactly what I was wanting back when I first thought of this. Plus, I was able to add some animated modes to scratch a particular itch I've had with this problem, in regards to visualizing about one remainder being colored at a time, and "scrolling" through them to see where they appear in the triangle.
 
-![](/images/anim1.gif)
+
 
 It's surprisingly enthralling, downright fun to play with, and honestly pretty beautiful. I don't understand the math as much as I'd like - would love answers to questions like:
 - Why, regardless of modulus, does remainder 0 stay "dense" and create those upside-down triangles? 

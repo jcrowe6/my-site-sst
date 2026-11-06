@@ -17,8 +17,11 @@
     "caniuse-lite": "^1.0.30001765",
     "date-fns": "^2.30.0",
     "gray-matter": "^4.0.3",
+    "katex": "^0.19.1",
+    "rehype-katex": "^7.0.1",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.0",
+    "remark-math": "^6.0.0",
     "sst": "3.17.37",
     "svelte": "^5.56.7"
   },
