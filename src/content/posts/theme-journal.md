@@ -1,5 +1,5 @@
 ---
-title: '2024!'
+title: 'Theme System Journal'
 date: '2024-02-16'
 ---
 
