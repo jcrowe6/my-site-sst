@@ -1,8 +1,11 @@
 {
   "private": true,
   "scripts": {
-    "build": "astro build",
+    "content": "bun scripts/sync-content.ts",
+    "predev": "bun run content",
     "dev": "astro dev",
+    "prebuild": "bun run content",
+    "build": "astro build",
     "preview": "astro preview",
     "start": "astro build && bun --bun serve dist"
   },
