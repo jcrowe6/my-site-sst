@@ -12,7 +12,7 @@ const posts = defineCollection({
 const puzzles = defineCollection({
   loader: glob({
     pattern: '**/index.md',
-    base: './submodules/puzzle-solves/puzzles',
+    base: './src/content/puzzle-solves/puzzles',
   }),
   schema: z.object({
     collection: z.string(),
@@ -25,7 +25,7 @@ const puzzles = defineCollection({
 const solves = defineCollection({
   loader: glob({
     pattern: '**/index.md',
-    base: './submodules/puzzle-solves/solves',
+    base: './src/content/puzzle-solves/solves',
   }),
   schema: z.object({
     collection: z.string(),
@@ -37,7 +37,7 @@ const solves = defineCollection({
 const books = defineCollection({
   loader: glob({
     pattern: '**/*.yaml',
-    base: './submodules/puzzle-solves/books',
+    base: './src/content/puzzle-solves/books',
   }),
   schema: z.object({
     id: z.string(),
